@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { OrganizationChart } from "primereact/organizationchart";
 import { TransformWrapper, TransformComponent } from "react-zoom-pan-pinch";
 import "primereact/resources/themes/saga-blue/theme.css";
@@ -7,8 +7,38 @@ import "primeicons/primeicons.css";
 import "./App.css";
 
 export default function App() {
+  const chartRef = useRef(null);
+  const wrapperRef = useRef(null);
   const defaultGradient = "linear-gradient(135deg, #1565c0, #42a5f5)";
 
+  const [expandedDetails, setExpandedDetails] = useState({});
+  const [optimalScale, setOptimalScale] = useState(1);
+
+  const toggleDetails = (id) => {
+    setExpandedDetails((prev) => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
+
+  // 🗝️ Ajuste automático del scale cuando se monta y cuando resize
+  useEffect(() => {
+    const handleResize = () => {
+      const container = wrapperRef.current;
+      const chart = chartRef.current;
+      if (container && chart) {
+        const containerWidth = container.clientWidth;
+        const chartWidth = chart.scrollWidth;
+        const scale = Math.min(containerWidth / chartWidth, 1);
+        setOptimalScale(scale);
+      }
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // 🗝️ Tu data igual que antes: 
   const data = [
     {
       label: {
@@ -249,19 +279,9 @@ export default function App() {
     };
   }
 
-  const [expandedDetails, setExpandedDetails] = useState({});
-
-  const toggleDetails = (id) => {
-    setExpandedDetails((prev) => ({
-      ...prev,
-      [id]: !prev[id]
-    }));
-  };
-
   const nodeTemplate = (node) => {
     const { id, name, position, area, details, list, dummy } = node.label;
     if (dummy) return <span className="dummy-node"></span>;
-
     const isExpanded = expandedDetails[id];
 
     return (
@@ -301,14 +321,16 @@ export default function App() {
   };
 
   return (
-    <div className="chart-container">
-      <TransformWrapper initialScale={0.8}>
+    <div className="chart-container" ref={wrapperRef}>
+      <TransformWrapper initialScale={optimalScale}>
         <TransformComponent>
-          <OrganizationChart
-            value={data}
-            nodeTemplate={nodeTemplate}
-            className="company"
-          />
+          <div ref={chartRef}>
+            <OrganizationChart
+              value={data}
+              nodeTemplate={nodeTemplate}
+              className="company"
+            />
+          </div>
         </TransformComponent>
       </TransformWrapper>
     </div>
