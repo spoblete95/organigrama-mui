@@ -302,7 +302,7 @@ export default function App() {
 
   return (
     <div className="chart-container">
-      <TransformWrapper initialScale={0.9}>
+      <TransformWrapper initialScale={0.8}>
         <TransformComponent>
           <OrganizationChart
             value={data}
