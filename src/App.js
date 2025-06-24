@@ -17,7 +17,7 @@ export default function App() {
   const toggleDetails = (id) => {
     setExpandedDetails((prev) => ({
       ...prev,
-      [id]: !prev[id]
+      [id]: !prev[id],
     }));
   };
 
@@ -28,7 +28,7 @@ export default function App() {
 
     if (!container || !chart) return;
 
-    const resizeObserver = new ResizeObserver(() => {
+    const calculateScale = () => {
       const containerWidth = container.clientWidth;
       const containerHeight = container.clientHeight;
       const chartWidth = chart.scrollWidth;
@@ -38,21 +38,21 @@ export default function App() {
       const scaleHeight = containerHeight / chartHeight;
 
       const scale = Math.min(scaleWidth, scaleHeight, 1) * 0.95; // margen de seguridad
-
       setOptimalScale(scale);
-    });
+    };
 
+    const resizeObserver = new ResizeObserver(calculateScale);
     resizeObserver.observe(chart);
 
-    window.addEventListener("resize", () => resizeObserver.observe(chart));
+    window.addEventListener("resize", calculateScale);
 
     return () => {
       resizeObserver.disconnect();
-      window.removeEventListener("resize", () => resizeObserver.observe(chart));
+      window.removeEventListener("resize", calculateScale);
     };
   }, []);
 
-  // ✅ Tu organigrama como antes:
+  // ✅ Tu organigrama exacto
   const data = [
     {
       label: {
@@ -60,15 +60,11 @@ export default function App() {
         name: "Javier Poblete D.",
         position: "Gerente General",
         area: "Gerencia General",
-        details: ["Por definir"]
+        details: ["Por definir"],
       },
       expanded: true,
-      children: [
-        OPERACIONES(),
-        CONTROL_Y_DESARROLLO(),
-        COMERCIAL()
-      ]
-    }
+      children: [OPERACIONES(), CONTROL_Y_DESARROLLO(), COMERCIAL()],
+    },
   ];
 
   function CONTROL_Y_DESARROLLO() {
@@ -78,7 +74,7 @@ export default function App() {
         name: "Sebastián Poblete",
         position: "Gerente de Control y Desarrollo",
         area: "Control y Desarrollo",
-        details: ["Por definir"]
+        details: ["Por definir"],
       },
       expanded: true,
       children: [
@@ -92,7 +88,7 @@ export default function App() {
                 name: "Miguel Walker",
                 position: "Jefe de Administración y RRHH",
                 area: "Administración y RRHH",
-                details: ["Por definir"]
+                details: ["Por definir"],
               },
               expanded: true,
               children: [
@@ -102,7 +98,7 @@ export default function App() {
                     name: "Marlén Muñoz",
                     position: "Administración y Cobranza",
                     area: "Administración",
-                    details: ["Por definir"]
+                    details: ["Por definir"],
                   },
                   expanded: true,
                   children: [
@@ -112,17 +108,17 @@ export default function App() {
                         name: "Jenny",
                         position: "Servicio Limpieza",
                         area: "Administración",
-                        details: ["Por definir"]
+                        details: ["Por definir"],
                       },
-                      expanded: true
-                    }
-                  ]
-                }
-              ]
-            }
-          ]
-        }
-      ]
+                      expanded: true,
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
     };
   }
 
@@ -133,7 +129,7 @@ export default function App() {
         name: "Francisco Jacob",
         position: "Gerente Comercial",
         area: "Área Comercial",
-        details: ["Por definir"]
+        details: ["Por definir"],
       },
       expanded: true,
       children: [
@@ -143,7 +139,7 @@ export default function App() {
             name: "Cristián Meneses",
             position: "Gerente de Ventas",
             area: "Área Comercial",
-            details: ["Por definir"]
+            details: ["Por definir"],
           },
           expanded: true,
           children: [
@@ -157,11 +153,11 @@ export default function App() {
                     name: "Especialistas en Ventas",
                     position: "Especialistas",
                     list: ["Sue Berna", "Humberto Manaure"],
-                    details: ["Por definir"]
+                    details: ["Por definir"],
                   },
-                  expanded: true
-                }
-              ]
+                  expanded: true,
+                },
+              ],
             },
             {
               label: {
@@ -169,9 +165,9 @@ export default function App() {
                 name: "Pablo Mazry",
                 position: "Jefe de Diseño y Arquitectura",
                 area: "Área Comercial",
-                details: ["Por definir"]
+                details: ["Por definir"],
               },
-              expanded: true
+              expanded: true,
             },
             {
               label: {
@@ -179,13 +175,13 @@ export default function App() {
                 name: "Andrés Pereda",
                 position: "Jefe de Sucursal",
                 area: "Área Comercial",
-                details: ["Por definir"]
+                details: ["Por definir"],
               },
-              expanded: true
-            }
-          ]
-        }
-      ]
+              expanded: true,
+            },
+          ],
+        },
+      ],
     };
   }
 
@@ -196,7 +192,7 @@ export default function App() {
         name: "Javier Poblete D.",
         position: "Gerente de Operaciones",
         area: "Área de Operaciones",
-        details: ["Por definir"]
+        details: ["Por definir"],
       },
       expanded: true,
       children: [
@@ -210,11 +206,11 @@ export default function App() {
                 name: "Supervisores de Obra",
                 position: "Supervisores",
                 list: ["Mario Reveco", "Cristián Agurto", "Dalton Quiara"],
-                details: ["Por definir"]
+                details: ["Por definir"],
               },
-              expanded: true
-            }
-          ]
+              expanded: true,
+            },
+          ],
         },
         {
           label: {
@@ -222,7 +218,7 @@ export default function App() {
             name: "Javier Poblete L.",
             position: "Jefe de Mantención y Servicio Técnico",
             area: "Área de Operaciones",
-            details: ["Por definir"]
+            details: ["Por definir"],
           },
           expanded: true,
           children: [
@@ -248,24 +244,24 @@ export default function App() {
                       "Madsen",
                       "Luis",
                       "Jorda",
-                      "Enzo"
+                      "Enzo",
                     ],
-                    details: ["Por definir"]
+                    details: ["Por definir"],
                   },
-                  expanded: true
+                  expanded: true,
                 },
                 {
                   label: {
                     id: "15",
                     name: "Servicio de Mantención",
                     list: ["Cesar Soto", "Victor", "José"],
-                    details: ["Por definir"]
+                    details: ["Por definir"],
                   },
-                  expanded: true
-                }
-              ]
-            }
-          ]
+                  expanded: true,
+                },
+              ],
+            },
+          ],
         },
         {
           label: {
@@ -273,7 +269,7 @@ export default function App() {
             name: "Francisco Shnettler",
             position: "Jefe de Almacenamiento",
             area: "Área de Operaciones",
-            details: ["Por definir"]
+            details: ["Por definir"],
           },
           expanded: true,
           children: [
@@ -283,13 +279,13 @@ export default function App() {
                 name: "Sebastián Fiedler",
                 position: "Jefe de Bodega",
                 area: "Área de Operaciones",
-                details: ["Por definir"]
+                details: ["Por definir"],
               },
-              expanded: true
-            }
-          ]
-        }
-      ]
+              expanded: true,
+            },
+          ],
+        },
+      ],
     };
   }
 
@@ -338,9 +334,9 @@ export default function App() {
     <div className="chart-container" ref={wrapperRef}>
       <TransformWrapper
         initialScale={optimalScale}
-        centerOnInit
         minScale={0.1}
         maxScale={2}
+        centerOnInit
       >
         <TransformComponent>
           <div ref={chartRef}>
