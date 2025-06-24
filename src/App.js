@@ -333,10 +333,11 @@ export default function App() {
   return (
     <div className="chart-container" ref={wrapperRef}>
       <TransformWrapper
-        initialScale={optimalScale}
+        initialScale={optimalScale || 0.8}  // fallback si aún no se calcula
         minScale={0.1}
         maxScale={2}
         centerOnInit
+        limitToBounds={false}  // 👈 importante para permitir moverse libremente
       >
         <TransformComponent>
           <div ref={chartRef}>

@@ -2,13 +2,15 @@ html, body, #root {
   width: 100%;
   height: 100%;
   margin: 0;
-  overflow: hidden; /* CRUCIAL para zoom/pan sin scroll raro */
+  padding: 0;
+  overflow: hidden; /* IMPORTANTE: quita scroll externo */
 }
 
 .chart-container {
   width: 100%;
   height: 100%;
-  overflow: hidden;  /* NO auto: react-zoom-pan-pinch maneja todo */
+  overflow: hidden; /* NO auto */
+  position: relative; /* Para seguridad */
   background: #fff;
 }
 
@@ -68,4 +70,9 @@ html, body, #root {
 
 .fade.show {
   max-height: 500px;
+}
+
+.react-transform-component {
+  min-width: 100%;
+  min-height: 100%;
 }
