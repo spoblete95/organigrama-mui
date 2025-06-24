@@ -1,19 +1,18 @@
-/* 🔑 Ajusta contenedor principal */
 html, body, #root {
   width: 100%;
   height: 100%;
   margin: 0;
-  overflow: hidden;
+  overflow: hidden; /* CRUCIAL para zoom/pan sin scroll raro */
 }
 
 .chart-container {
   width: 100%;
-  height: 100vh;
-  overflow: hidden; /* Evita scroll extra, ahora lo maneja pan/zoom */
+  height: 100%;
+  overflow: hidden;  /* NO auto: react-zoom-pan-pinch maneja todo */
   background: #fff;
 }
 
-/* 🎨 Diseño del nodo */
+/* 🎨 Nodos */
 .node-content {
   background: linear-gradient(135deg, #1565c0, #42a5f5);
   color: white;
@@ -26,41 +25,22 @@ html, body, #root {
   border: none;
 }
 
-/* 🗂️ Dummy node: no se muestra */
 .dummy-node {
   display: none !important;
 }
 
-/* 📌 Texto dentro de cada caja */
-.node-name {
-  font-weight: bold;
-  font-size: 1rem;
-}
+.node-name { font-weight: bold; font-size: 1rem; }
+.node-position { font-size: 0.85rem; }
+.node-area { font-size: 0.75rem; font-style: italic; }
+.node-list { text-align: left; margin-top: 8px; padding-left: 16px; font-size: 0.75rem; }
 
-.node-position {
-  font-size: 0.85rem;
-}
-
-.node-area {
-  font-size: 0.75rem;
-  font-style: italic;
-}
-
-.node-list {
-  text-align: left;
-  margin-top: 8px;
-  padding-left: 16px;
-  font-size: 0.75rem;
-}
-
-/* ✅ Botón Ver detalles */
 .node-toggle {
   font-size: 0.7rem;
   margin-top: 6px;
   font-style: italic;
   opacity: 0.95;
   cursor: pointer;
-  color: #f57c00; /* Naranjo Splash */
+  color: #f57c00;
   font-weight: bold;
   border-radius: 4px;
   padding: 2px 6px;
@@ -72,17 +52,14 @@ html, body, #root {
     1px 1px 0 #fff;
 }
 
-/* 🗂️ OrganizaciónChart: quita borde de contenedor */
 .p-organizationchart-node-content {
   border: none !important;
 }
 
-/* 🚫 Oculta flecha de dummy para saltar nivel */
 .p-organizationchart-line-down:has(+ .dummy-node) {
   display: none !important;
 }
 
-/* 📌 Detalles con transición suave */
 .fade {
   max-height: 0;
   overflow: hidden;
