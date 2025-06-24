@@ -27,6 +27,11 @@ html, body, #root {
   border: none;
 }
 
+/* Hack para liberar pan & zoom completo */
+.react-transform-wrapper {
+  overflow: visible !important;
+}
+
 .dummy-node {
   display: none !important;
 }
