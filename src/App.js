@@ -21,24 +21,38 @@ export default function App() {
     }));
   };
 
-  // 🗝️ Ajuste automático del scale cuando se monta y cuando resize
+  // ✅ Ajuste robusto con ResizeObserver (ancho + alto)
   useEffect(() => {
-    const handleResize = () => {
-      const container = wrapperRef.current;
-      const chart = chartRef.current;
-      if (container && chart) {
-        const containerWidth = container.clientWidth;
-        const chartWidth = chart.scrollWidth;
-        const scale = Math.min(containerWidth / chartWidth, 1);
-        setOptimalScale(scale);
-      }
+    const container = wrapperRef.current;
+    const chart = chartRef.current;
+
+    if (!container || !chart) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      const containerWidth = container.clientWidth;
+      const containerHeight = container.clientHeight;
+      const chartWidth = chart.scrollWidth;
+      const chartHeight = chart.scrollHeight;
+
+      const scaleWidth = containerWidth / chartWidth;
+      const scaleHeight = containerHeight / chartHeight;
+
+      const scale = Math.min(scaleWidth, scaleHeight, 1) * 0.95; // margen de seguridad
+
+      setOptimalScale(scale);
+    });
+
+    resizeObserver.observe(chart);
+
+    window.addEventListener("resize", () => resizeObserver.observe(chart));
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", () => resizeObserver.observe(chart));
     };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // 🗝️ Tu data igual que antes: 
+  // ✅ Tu organigrama como antes:
   const data = [
     {
       label: {
@@ -322,7 +336,12 @@ export default function App() {
 
   return (
     <div className="chart-container" ref={wrapperRef}>
-      <TransformWrapper initialScale={optimalScale}>
+      <TransformWrapper
+        initialScale={optimalScale}
+        centerOnInit
+        minScale={0.1}
+        maxScale={2}
+      >
         <TransformComponent>
           <div ref={chartRef}>
             <OrganizationChart
